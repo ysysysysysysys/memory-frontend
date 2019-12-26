@@ -39,10 +39,11 @@
 
 <script>
 
-    import {getList, UploadRequest} from "@network/mainRequest";
+    import {getList, UploadRequest, download, downloadRequest} from "@network/mainRequest";
     import BetterScroll from "@components/betterscroll/Scroll"
     import {Loading} from 'element-ui'
     import Search from "@components/search/Search";
+    import {postDownLoadFile, debounce} from "@util/util"
 
     export default {
         name: "picture",
@@ -63,8 +64,8 @@
                 searchState: false,
                 input: null,
                 tip: false,
-                chooseState:false,
-                names:[]
+                chooseState: false,
+                names: []
 
             }
         },
@@ -82,14 +83,14 @@
             this.$store.dispatch('changeTabState', true)
             this.getMessage(this.pageNum, 'init')
         },
-        mounted(){
-            this.$bus.$on('chooseClick',req =>{
+        mounted() {
+            this.$bus.$on('chooseClick', req => {
                 this.chooseState = req
-                this.names=[]
+                this.names = []
             })
 
-            this.$bus.$on('downloadClick',()=>{
-                this.download()
+            this.$bus.$on('downloadClick', () => {
+                debounce(this.downloads(),300)
             })
         },
         methods: {
@@ -156,10 +157,10 @@
                             }
                         }
                         console.log(res.data.body.length);
-                        if(res.data.body.length === 0){
-                            this.tip=true
-                        }else{
-                            this.tip=false
+                        if (res.data.body.length === 0) {
+                            this.tip = true
+                        } else {
+                            this.tip = false
                             this.totalPageNum = res.data.body[0].total;
                         }
                     })
@@ -184,6 +185,26 @@
                     this.$refs.scroll.pullDownFinish()
                 }, 1000)
             },
+            downloads() {
+                let datas = []
+                this.names.forEach(n => {
+                    let request = new downloadRequest(n, this.$store.state.user.account, "IMAGE");
+                    datas.push(request)
+                })
+                download(datas)
+                    .then(res => {
+                        console.log(res.data);
+                        if (res.status == 200 && res.data != null && res.data.length != 0) {
+                            let date = new Date();
+                            postDownLoadFile(res.data, "IMAGE" + date.toLocaleString())
+                            this.chooseState = false
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+
+            }
         },
     }
 </script>
@@ -245,23 +266,24 @@
         color: white;
     }
 
-    .chooseImage{
+    .chooseImage {
         opacity: .5
     }
 
-    /deep/.el-checkbox__label{
+    /deep/ .el-checkbox__label {
         display: none;
         padding-left: 10px;
         line-height: 19px;
         font-size: 14px;
     }
 
-    .el-checkbox-group{
+    .el-checkbox-group {
         position: fixed;
         z-index: 10;
         margin-left: 74px;
     }
-    /deep/ .el-page-header__title{
+
+    /deep/ .el-page-header__title {
         display: none;
     }
 </style>

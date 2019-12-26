@@ -21,9 +21,11 @@ export function download(datas) {
     return mainBase({
         url:'/oss/download',
         method:'POST',
-        data:datas
+        data:datas,
+        responseType: 'blob'
     })
 }
+
 
 export class UploadRequest {
     constructor(account, memoryType, year, pageNum, pageSize) {
@@ -32,5 +34,13 @@ export class UploadRequest {
         this.year = year;
         this.pageNum = pageNum;
         this.pageSize = pageSize;
+    }
+}
+
+export class downloadRequest {
+    constructor(objectName,account,memoryType){
+        this.objectName = objectName;
+        this.account= account;
+        this.memoryType = memoryType;
     }
 }
