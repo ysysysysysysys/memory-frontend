@@ -15,7 +15,8 @@ export default new Vuex.Store({
       token:localStorage.token
     },
     tabState:false,
-    memoryType:""
+    memoryType:"",
+    contentType:'FILE'
   },
   mutations,
   actions,

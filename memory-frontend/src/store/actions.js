@@ -13,5 +13,8 @@ export default {
     },
     saveMemoryType({commit},type){
         commit('saveType',type)
+    },
+    changeContentType({commit},type){
+        commit("contentType",type)
     }
 }

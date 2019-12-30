@@ -51,7 +51,7 @@
                                     this.$store.dispatch('saveToken', this.ruleForm).then(res =>{
                                         //修改tabState
                                         this.$store.dispatch('changeTabState',true).then(res =>{
-                                            this.$router.replace('/picture')
+                                            this.$router.push('/content')
                                         })
                                     })
                                 }else{

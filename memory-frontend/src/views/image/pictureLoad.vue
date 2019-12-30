@@ -38,11 +38,15 @@
         },
         methods: {
             submit(){
+                this.request = new FormData()
                 submitUpload(this.request,this.$refs.uploads,'IMAGE',this.fileList)
             },
             back(){
                 this.$store.dispatch('changeTabState',true)
-                this.$router.replace('/picture')
+                this.$router.replace('/content')
+                this.fileList = []
+                this.$store.dispatch('changeContentType', this.$store.state.contentType)
+                this.$bus.$emit('refresh', this.$store.state.contentType)
             },
             preview(file){
                 this.$message.info('照片名称'+file.name)
@@ -63,10 +67,11 @@
         content: none;
     }
     /deep/ .el-upload-list__item{
-        width: 70%;
+        width: 271px;
     }
     /deep/.el-page-header__left{
         height: 40px;
     }
+
 
 </style>

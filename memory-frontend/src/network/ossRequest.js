@@ -12,7 +12,7 @@ export function submitUpload(request,uploads,type,fileList) {
     uploads.submit();
     if (!request.get('file')) {
         loading.close()
-        Message.error('请选择图片')
+        Message.error('请选择上传文件')
     } else {
         request.append("type", type)
         upload(request)
@@ -29,9 +29,15 @@ export function submitUpload(request,uploads,type,fileList) {
                     }
                 } else {
                     Message.info('上传完成')
+                    if(r.body){
+                        console.log('空');
+                    }
                     r.body.forEach(n =>{
-                        fileList.push(n)
+                        if(n != null){
+                            fileList.push(n)
+                        }
                     })
+                    console.log(fileList);
                 }
                 loading.close()
             })

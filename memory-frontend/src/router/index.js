@@ -13,6 +13,7 @@ const file = () => import('@views/file/file')
 const videoLoad = () => import('@views/video/videoLoad')
 const fileLoad = () => import('@views/file/fileLoad')
 const pictureLoad = () => import('@views/image/pictureLoad')
+const content = () => import('@views/content/content')
 const routes = [
   {
     path:'/',
@@ -63,6 +64,11 @@ const routes = [
     path:'/pictureLoad',
     name:'pictureLoad',
     component:pictureLoad
+  },
+  {
+    path:'/content',
+    name:'content',
+    component:content
   }
 
 ]

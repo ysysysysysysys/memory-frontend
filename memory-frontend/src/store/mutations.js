@@ -8,5 +8,8 @@ export default {
     },
     saveType(state,type){
         state.memoryType= type
+    },
+    contentType(state,type){
+        state.contentType = type
     }
 }

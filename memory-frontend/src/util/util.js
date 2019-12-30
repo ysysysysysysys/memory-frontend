@@ -1,3 +1,8 @@
+import {download, downloadRequest} from "@network/mainRequest";
+import store from '../store'
+import { Loading } from 'element-ui';
+
+
 export function debounce(func,wait){
     let time = 0
     return function (...args) {
@@ -20,4 +25,33 @@ export function postDownLoadFile(data, fileName) {
     downloadElement.click(); // 点击下载
     document.body.removeChild(downloadElement); // 下载完成移除元素
     window.URL.revokeObjectURL(href); // 释放掉blob对象
+}
+
+export function downloads(names,type) {
+    const options = {
+        spinner: 'el-icon-loading',
+        text: '正在下载请稍后'
+    }
+    const loading = Loading.service(options)
+    let datas = []
+    names.forEach(n => {
+        let request = new downloadRequest(n, store.state.user.account, type);
+        datas.push(request)
+    })
+    console.log(datas);
+
+    download(datas)
+        .then(res => {
+            console.log(res);
+            if (res.status == 200 && res.data != null && res.data.length != 0) {
+                let date = new Date();
+                postDownLoadFile(res.data, type + date.toLocaleString())
+                //修改chooseState
+                loading.close()
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        })
+
 }
