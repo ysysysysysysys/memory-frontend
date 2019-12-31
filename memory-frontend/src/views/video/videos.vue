@@ -1,12 +1,15 @@
 <template>
     <div class="video">
         <div class="video" v-for="i in dataList" >
-            <el-checkbox-group v-model="names" v-show="chooseState">
-                <el-checkbox :key="i.originalFilename" :label="i.originalFilename"></el-checkbox>
+            <div class="button">
+                <el-button class="click_button" icon="el-icon-video-play"  @click="showVideo(i.url,i.originalFilename)" ></el-button>
+                <el-button class="click_button" icon="el-icon-search"  @click="showName(i.originalFilename)" ></el-button>
+            </div>
+            <el-checkbox-group v-model="names" >
+                <el-checkbox :key="i.originalFilename"
+                             :label="i.originalFilename"
+                >{{i.originalFilename}}</el-checkbox>
             </el-checkbox-group>
-            <video id="video"  preload="auto" @click="showVideo(i.url,i.originalFilename)" class="videoSource"  :class="{chooseImage:chooseState} ">
-                <source :src="i.url" type="	video/mp4" />
-            </video>
         </div>
     </div>
 </template>
@@ -32,7 +35,9 @@
         },
         mounted() {
             this.$bus.$on('chooseClick', req => {
-                this.names = []
+                this.names = [];
+                this.$el.style.setProperty('')
+
             })
         },
         methods: {
@@ -52,44 +57,54 @@
                     show: true
                 }
                 this.$emit('video', obj)
+            },
+            showName(name){
+                this.$message.info('视频的名字:'+name)
             }
         }
     }
 </script>
 
 <style scoped>
-    .video {
-        display: flex;
-        flex-wrap:wrap;
+
+
+
+
+
+
+    /deep/.el-checkbox__label{
+        font-size: 18px;
+        padding: 5px;
     }
-    .videoSource{
-        width: 117px;
-        height: 168px;
-        border-width: 2px;
-        border-style: ridge;
-        margin: 2px;
+    /deep/.el-checkbox__inner{
+        margin-left: 4px;
     }
-    .test{
-        width: 100px;
-        height: 100px;
-    }
-    .chooseImage {
-        opacity: .5
+    .el-checkbox {
+        color: #606266;
+        font-weight: 500;
+        font-size: 14px;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        width: 70%;
+        overflow: hidden;
     }
 
-    /deep/ .el-checkbox__label {
-        display: none;
-        padding-left: 10px;
-        line-height: 19px;
-        font-size: 14px;
+    .click_button{
+        width: 10px;
+        height: 29px;
+        background-color: rgba(177, 177, 181, 0.28);
+
     }
-    .el-checkbox-group {
-        position: fixed;
-        z-index: 10;
-        margin-left: 105px;
+    .button{
+        position: absolute;
+        left: 279px;
+
     }
-    /deep/ .el-checkbox__inner{
-        border-color: rgba(177, 177, 181, 0.84);
-        top:4px
+    /deep/[class^=el-icon-] {
+        margin: -10px;
+        font-size: 20px;
     }
 </style>

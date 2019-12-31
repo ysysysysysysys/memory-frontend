@@ -20,6 +20,9 @@
             <el-form-item label="请输入手机号" prop="phone">
                 <el-input v-model.number="ruleForm.phone"></el-input>
             </el-form-item>
+            <el-form-item label="注册码" prop="registCode">
+                <el-input v-model.number="ruleForm.registCode"></el-input>
+            </el-form-item>
             <el-form-item label="性别" prop="sex">
                 <el-radio-group v-model="ruleForm.sex">
                     <el-radio label="man">男</el-radio>
@@ -89,7 +92,8 @@
                     name: "",
                     account: "",
                     password: "",
-                    phone: ""
+                    phone: "",
+                    registCode:''
                 },
                 rules: {
                     account: [{required: true, validator: checkAccount, trigger: 'blur'}],
@@ -98,7 +102,8 @@
                         {min: 6, max: 12, message: "密码必须是6-12位哦"}],
                     name: [{required: true, message: '请输入姓名'}],
                     phone: [{required: true, validator: checkphone},],
-                    sex: [{required: true, message: '请选择性别'}]
+                    sex: [{required: true, message: '请选择性别'}],
+                    registCode:[{required:true,message:'请填写注册码'}]
                 }
             }
         },
@@ -108,6 +113,7 @@
                     if (valid) {
                         regist(this.ruleForm)
                             .then(res => {
+                                console.log(res);
                                 if (res.data.success) {
                                     this.$message({
                                         showClose: true,
@@ -121,7 +127,7 @@
                                     }, 3000)
                                 } else {
                                     console.log('系统错误');
-                                    this.$message.error('系统错误')
+                                    this.$message.error(res.data.message)
                                 }
                             })
                             .catch(err => {

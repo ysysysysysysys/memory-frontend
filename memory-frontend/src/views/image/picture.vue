@@ -1,6 +1,6 @@
 <template>
     <div class="block">
-        <div v-for="i in dataList">
+        <div v-for="(i,index) in dataList">
             <el-checkbox-group v-model="names" v-show="chooseState">
                 <el-checkbox :key="i.originalFilename" :label="i.originalFilename"></el-checkbox>
             </el-checkbox-group>
@@ -9,7 +9,7 @@
                     :class="{chooseImage:chooseState}"
                     :src="i.url"
                     :fit="fit"
-                    @click.native="showImage(i.url,i.name)"></el-image>
+                    @click.native="showImage(i.url,i.name,index)"></el-image>
         </div>
     </div>
 </template>
@@ -41,11 +41,12 @@
             })
         },
         methods: {
-            showImage(url, name) {
+            showImage(url, name,index) {
                 const obj = {
                     image: url,
                     bigImageName: name,
-                    bigImage: true
+                    bigImage: true,
+                    index:index
                 }
                 console.log(obj);
                 this.$emit('showImage', obj)

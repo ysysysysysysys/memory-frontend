@@ -37,7 +37,7 @@
             <el-page-header @back="goBack" :content="bigImageName">
             </el-page-header>
             <div class="real_image">
-                <img :src="image" class="bigImage" alt=""/>
+                <img :src="image" class="bigImage" alt="" @touchstart="touchStart" @touchend='touchEnd' />
             </div>
         </div>
         <div class="showVideo" v-show="showVideo && !chooseState">
@@ -84,7 +84,9 @@
                 chooseState: false,
                 showVideo:false,
                 videoUrl:'',
-                videoName:''
+                videoName:'',
+                touchex:0,
+                bigImageIndex:0
             }
         },
         computed: {
@@ -120,6 +122,32 @@
             })
         },
         methods: {
+            touchStart(res){
+                this.touchex = res.changedTouches[0].clientX;
+            },
+            touchEnd(res){
+                const endX = res.changedTouches[0].clientX;
+                let num = endX-this.touchex
+                const list = this.$refs.picture.dataList
+                if(num > 100){
+                    const n = this.bigImageIndex-=1
+                    if(n < 0){
+                        this.$message.info('暂无更多记忆')
+                        this.bigImageIndex=0
+                    }else{
+                        this.image = list[n].url
+                    }
+                }else if(num < -100){
+                    const n = this.bigImageIndex+=1
+                    if(n > this.dataList.length-1){
+                        this.$message.info('暂无更多记忆')
+                        this.bigImageIndex=this.dataList.length-1
+                    }else{
+                        this.image = list[n].url
+                    }
+                }
+            },
+
             video(obj){
                 console.log(obj);
                 this.videoUrl = obj.videoUrl;
@@ -127,11 +155,15 @@
                 this.showVideo = obj.show;
             },
             backVideo(){
-                console.log("false");
                 this.showVideo = false
             },
             getContentState(contentType) {
+                console.log(contentType == 'SELF');
+
                 let type = this.$store.state.contentType
+                if(type == "SELF"){
+                    this.tip = false
+                }
                 console.log(type);
                 return type == contentType
             },
@@ -151,6 +183,7 @@
                 this.image = res.image
                 this.bigImageName = res.bigImageName
                 this.bigImage = res.bigImage
+                this.bigImageIndex = res.index
             },
             pullDown() {
                 console.log('pullDown');
@@ -356,4 +389,6 @@
         height: 90%;
         width: 100vw;
     }
+
+
 </style>
