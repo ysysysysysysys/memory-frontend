@@ -338,6 +338,7 @@
     }
 
     .bigImage {
+        top: 48px;
         height: auto;
         width: 100vw;
         opacity: 1.0;
